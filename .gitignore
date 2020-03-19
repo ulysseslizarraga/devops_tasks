@@ -126,3 +126,4 @@ config/
 .idea/vcs.xml
 
 devops_tasks/config.json
+*.sh
