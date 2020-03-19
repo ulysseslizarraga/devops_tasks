@@ -124,3 +124,5 @@ config/
 .idea/modules.xml
 .idea/workspace.xml
 .idea/vcs.xml
+
+devops_tasks/config.json
