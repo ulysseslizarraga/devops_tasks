@@ -14,6 +14,7 @@ class DevOpsAdapter():
         config_paths = [os.getcwd()+r"/devops_tasks/"+config_file, config_file]
         self.clr = colorstr.bcolors()
         self.url = 'https://dev.azure.com/'
+        self.work_item_dict = {}
 
         for config_path in config_paths:
             try:
@@ -24,8 +25,7 @@ class DevOpsAdapter():
                 pass
 
         if not config_dict:
-            print("")
-            print(f"{self.clr.FAIL}[ERROR]{self.clr.ENDC} Empty or non-existent config file in either of paths:")
+            print(f"\n{self.clr.FAIL}[ERROR]{self.clr.ENDC} Empty or non-existent config file in either of paths:")
             print(f"{config_paths}")
             return
 
@@ -38,7 +38,7 @@ class DevOpsAdapter():
         """
         TODO
         """
-        work_item_dict = {}
+        
         for org in org_dict:
             full_url = self.url+org
             connection = Connection(base_url=full_url,
@@ -50,17 +50,20 @@ class DevOpsAdapter():
                 continue
             
             for state in states:
-                if state not in work_item_dict.keys():
-                    work_item_dict[state] = []
+                if state not in self.work_item_dict.keys():
+                    self.work_item_dict[state] = []
                 work_item_list = self.query_boards(wit_client, self.query_parser(state))
                 if work_item_list:
-                    work_item_dict[state].extend(work_item_list)
+                    self.work_item_dict[state].extend(work_item_list)
 
-        if work_item_dict:
-            for state in work_item_dict.keys():
-                print("")
-                print(self.clr.HEADER+state+self.clr.ENDC)
-                for work_item in work_item_dict[state]:
+    def print_work_items(self):
+        """
+        TODO
+        """
+        if self.work_item_dict:
+            for state in self.work_item_dict.keys():
+                print("\n"+self.clr.HEADER+state+self.clr.ENDC)
+                for work_item in self.work_item_dict[state]:
                     print(work_item)
 
     def query_parser(self, state):
